@@ -59,14 +59,16 @@ task createDockerfile(type: Dockerfile) {
     destFile = project.file(project.property('dockerfilePath'))
     from 'tomcat:8-jre8'
     maintainer 'Jeremy Brown <jj.brown@hotmail.com>'
-    addFile 'settings.xml', '/usr/local/tomcat/conf'
-    addFile 'tomcat-users.xml', '/usr/local/tomcat/conf'
+    addFile 'tomcat/settings.xml', '/usr/local/tomcat/conf'
+    addFile 'tomcat/tomcat-users.xml', '/usr/local/tomcat/conf'
     addFile 'build/libs/' + project.property('warName'), '$CATALINA_HOME/webapps/'
 }
 
 task buildImage(type: DockerBuildImage) {
     dependsOn createDockerfile
-    inputDir = createDockerfile.destFile.parentFile
+    dockerFile = project.file(project.property('dockerfilePath'))
+//    inputDir = createDockerfile.destFile.parentFile
+    inputDir = project.rootDir
     tag = project.property('dockerImageTag')
 }
 

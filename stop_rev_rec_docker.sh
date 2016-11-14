@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-docker stop rev_rec && docker rm -f rev_rec
-
+CONTAINER_NAME=rev_rec
+docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
