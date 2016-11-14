@@ -1,0 +1,108 @@
+group 'com.asdf.soen387'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.docker-remote-api'
+
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.image.*
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+
+    // https://mvnrepository.com/artifact/javax.servlet/jstl
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+    // https://mvnrepository.com/artifact/org.eclipse.persistence/org.eclipse.persistence.jpa
+    compile group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.jpa', version: '2.6.4'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.3'
+    }
+}
+
+// Required fixes for Docker for Mac not finding API
+configurations {
+    dockerJava {
+        resolutionStrategy {
+            force 'de.gesellix:unix-socket-factory:2016-04-06T22-21-19'
+        }
+    }
+}
+docker {
+    url = 'unix:///var/run/docker.sock'
+}
+
+war {
+    archiveName = project.property('warName')
+}
+
+task createDockerfile(type: Dockerfile) {
+    dependsOn war
+    destFile = project.file(project.property('dockerfilePath'))
+    from 'tomcat:8-jre8'
+    maintainer 'Jeremy Brown <jj.brown@hotmail.com>'
+    addFile 'settings.xml', '/usr/local/tomcat/conf'
+    addFile 'tomcat-users.xml', '/usr/local/tomcat/conf'
+    addFile 'build/libs/' + project.property('warName'), '$CATALINA_HOME/webapps/'
+}
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn createDockerfile
+    inputDir = createDockerfile.destFile.parentFile
+    tag = project.property('dockerImageTag')
+}
+
+task createContainer(type: DockerCreateContainer) {
+    dependsOn buildImage
+    targetImageId { buildImage.getImageId() }
+    containerName = 'lib_cat'
+    portBindings = ['8080:8080']
+}
+
+task startContainer(type: DockerStartContainer) {
+    dependsOn createContainer
+    targetContainerId { createContainer.getContainerId() }
+}
+
+task stopContainer(type: DockerStopContainer) {
+    targetContainerId {createContainer.getContainerId() }
+}
+
+task srcZip(type: Zip) {
+    classifier = 'src'
+    from sourceSets*.allSource
+}
+
+task createSubmissionZip (type: Zip) {
+    dependsOn war
+
+    from ('.') {
+        include 'src/**'
+        include 'README.txt'
+    }
+
+    from('build/libs/') {
+        file war.getArchivePath()
+    }
+
+    archiveName 'A2_27515421.zip'
+}
+
