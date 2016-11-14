@@ -73,7 +73,7 @@ task buildImage(type: DockerBuildImage) {
 task createContainer(type: DockerCreateContainer) {
     dependsOn buildImage
     targetImageId { buildImage.getImageId() }
-    containerName = 'lib_cat'
+    containerName = 'rev_rec'
     portBindings = ['8080:8080']
 }
 
