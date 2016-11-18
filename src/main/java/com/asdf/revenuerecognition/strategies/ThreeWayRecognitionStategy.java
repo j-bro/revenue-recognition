@@ -1,9 +1,10 @@
 package com.asdf.revenuerecognition.strategies;
 
-import soen387.common.DateCalculator;
-import soen387.common.Money;
-import soen387.domainlogic.domainmodel.domainmodel.Contract;
-import soen387.domainlogic.domainmodel.domainmodel.RevenueRecognition;
+
+import com.asdf.revenuerecognition.beans.ContractBean;
+import com.asdf.revenuerecognition.beans.RevenueRecognition;
+import com.asdf.revenuerecognition.util.DateCalculator;
+import com.asdf.revenuerecognition.util.Money;
 
 public class ThreeWayRecognitionStategy extends RecoginitionStrategy {
 	
@@ -17,11 +18,13 @@ public class ThreeWayRecognitionStategy extends RecoginitionStrategy {
 	}
 
 	@Override
-	public void calculateRevenueRecognitions(Contract contract) {
+	public void calculateRevenueRecognitions(ContractBean contract) {
 		Money[] allocation = contract.getRevenue().allocation(3);
 		contract.addRevenueRecognition(new RevenueRecognition(allocation[0], contract.getWhenSigned()));
-		contract.addRevenueRecognition(new RevenueRecognition(allocation[1], DateCalculator.addDay(contract.getWhenSigned(), firstRecognitionOffset)));
-		contract.addRevenueRecognition(new RevenueRecognition(allocation[2], DateCalculator.addDay(contract.getWhenSigned(), secondRecognitionOffset)));
+		contract.addRevenueRecognition(new RevenueRecognition(allocation[1],
+				DateCalculator.addDay(contract.getWhenSigned(), firstRecognitionOffset)));
+		contract.addRevenueRecognition(new RevenueRecognition(allocation[2],
+				DateCalculator.addDay(contract.getWhenSigned(), secondRecognitionOffset)));
 		
 	}
 

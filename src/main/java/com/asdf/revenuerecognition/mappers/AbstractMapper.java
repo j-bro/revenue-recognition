@@ -1,6 +1,6 @@
 package com.asdf.revenuerecognition.mappers;
 
-import com.asdf.revenuerecognition.models.AbstractModel;
+import com.asdf.revenuerecognition.beans.AbstractBean;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -14,31 +14,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * This class is the super class for all data mappers. 
  * This class contains common behavior of data mappers. 
  * THis class follows the pattern Layer Supertype from [PoEAA, p475]
  * 
- * @author Yuhong Yan 
+ * @author Yuhong Yan
+ * @author Jeremy Brown
+ * Adapted from the AbstractMapper class given in the class samples.
  *
  */
 
-public abstract class AbstractMapper {
+public abstract class AbstractMapper<T extends AbstractBean> {
 	
 	/**
 	 * loadedMap implements the pattern IdentityMap from [PoEAA, p195]
 	 * If to find a domain object, first check if this object is in memory, ie.
 	 * in the loadedMap, before pulling the data from database 
 	 */
-	protected Map<Serializable, AbstractModel> loadedMap = new HashMap<Serializable, AbstractModel>();
+	protected Map<Serializable, T> loadedMap = new HashMap<>();
 	
 	private Connection db;
-
-    private String createProductsTableString =
-            "CREATE TABLE products (ID int primary key, name varchar, type varchar);";
-    private String createContractsTableString =
-            "CREATE TABLE contracts (ID int primary key, product int, revenue decimal, dateSigned date)";
-    private String createRevenueRecognitionsTableString = "CREATE TABLE revenueRecognitions (contract int, " +
-            "amount decimal, recognizedOn date, PRIMARY KEY (contract, recognizedOn))";
 
 	/**
 	 * the return string is domain specific
@@ -52,6 +48,12 @@ public abstract class AbstractMapper {
 	protected abstract String insertStatement();
 
 	protected abstract String findAllStatement();
+
+    protected abstract String createTableStatement();
+
+	public abstract T find(Long id);
+
+    public abstract List<T> findAll();
 	
 	/**
 	 * need to give this task to domain specific mapper
@@ -59,7 +61,7 @@ public abstract class AbstractMapper {
 	 * @param stmt
 	 * @throws SQLException
 	 */
-	protected abstract void doInsert(AbstractModel p, PreparedStatement stmt) throws SQLException ;
+	protected abstract void doInsert(T p, PreparedStatement stmt) throws SQLException ;
 	
 	/**
 	 * need to give this task to domain specific mapper
@@ -68,96 +70,158 @@ public abstract class AbstractMapper {
 	 * @return
 	 * @throws SQLException
 	 */
-	protected abstract AbstractModel doLoad(Long id, ResultSet rs) throws SQLException;
+	protected abstract T doLoad(Long id, ResultSet rs) throws SQLException;
 
-	
-	protected AbstractModel abstractFind(Long id){
-		if(db==null) setConnection();
-		AbstractModel result = (AbstractModel) loadedMap.get(id);
-		if(result != null) return result;		
+    /**
+     *
+     * @param id
+     * @return
+     */
+	protected T abstractFind(Long id){
+		if(db == null) {
+            setConnection();
+        }
+
+		T result = loadedMap.get(id);
+		if (result != null) {
+            return result;
+        }
+
 		PreparedStatement stmt = null;
 		try {
 			stmt = db.prepareStatement(findStatement());
-			stmt.setLong(1, id.longValue());
+			stmt.setLong(1, id);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			result = load(rs);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
+
 		return result;		
 	}
-	
-	protected List<AbstractModel> abstractFindAll(String name){
-		if(db==null) setConnection();
-		List<AbstractModel> result = null;
+
+    /**
+     *
+     * @return
+     */
+	protected List<T> abstractFindAll() {
+		if (db == null) {
+            setConnection();
+        }
+
+		List<T> result = null;
 		PreparedStatement stmt = null;
 		
 		try {
 			stmt = db.prepareStatement(findAllStatement());
-			stmt.setString(1, name);
 			ResultSet rs = stmt.executeQuery();
 			return loadAll(rs);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 		return result;
 	}
-	
-	private List<AbstractModel> loadAll(ResultSet rs) throws SQLException{
-		List<AbstractModel> result = new ArrayList<AbstractModel>();
-		while(rs.next()){
+
+    /**
+     *
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
+	private List<T> loadAll(ResultSet rs) throws SQLException{
+		List<T> result = new ArrayList<>();
+		while(rs.next()) {
 			result.add(load(rs));
 		}
 		
 		return result;
 	}
-	
-	private AbstractModel load(ResultSet rs) throws SQLException {
-		Long id = new Long(rs.getLong(1));
-		if(loadedMap.containsKey(id))
-			return (AbstractModel) loadedMap.get(id);
-		AbstractModel result = doLoad(id, rs);
+
+    /**
+     *
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
+	private T load(ResultSet rs) throws SQLException {
+		Long id = rs.getLong(1);
+		if(loadedMap.containsKey(id)) {
+            return loadedMap.get(id);
+        }
+
+		T result = doLoad(id, rs);
 		loadedMap.put(id, result);
 		return result;
 	}
-	
-	protected Long insert(AbstractModel p){
-		if(db == null) setConnection();
+
+    /**
+     *
+     * @return
+     */
+	protected boolean createTable() {
+        if (db == null) {
+            setConnection();
+        }
+
+        PreparedStatement stmt = null;
+        int statementResult = 1;
+        try {
+            stmt = db.prepareStatement(createTableStatement());
+            statementResult = stmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return statementResult == 0;
+    }
+
+    /**
+     *
+     * @param model
+     * @return
+     */
+	protected Long insert(T model){
+		if (db == null) {
+            setConnection();
+        }
+
 		PreparedStatement stmt = null;
-		try{
+		try {
 		    stmt = db.prepareStatement(insertStatement());
-			p.setID(findNextDatabaseId());
-			stmt.setInt(1, p.getID().intValue());
-			doInsert(p, stmt);
-			//System.out.println("in Person.insert"+ stmt.toString());
+			model.setId(findNextDatabaseId());
+			stmt.setInt(1, model.getId().intValue());
+			doInsert(model, stmt);
 			stmt.executeUpdate();
-			loadedMap.put(p.getClass(), p);
-		}catch(SQLException e){
-			System.out.println(e);
+			loadedMap.put(model.getClass(), model);
+		} catch(SQLException e) {
+            e.printStackTrace();
 		}
-		return p.getID();
+
+		return model.getId();
 	}
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
 	private Long findNextDatabaseId() throws SQLException {	
 		PreparedStatement stmt = db.prepareStatement(lastIDStatement());
 		ResultSet rs = stmt.executeQuery();
 		rs.next();
-		//System.out.println("in Person.findNextDatabaseId"+ rs.getInt(1));
 		return (long) (rs.getInt(1)+1);
 	}
 
+    /**
+     *
+     */
 	private void setConnection(){
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		
-	      // Setup the connection with the DB
-	    db = DriverManager
-	          .getConnection(connectionString());
+			Class.forName("com.mysql.cj.jdbc.Driver");
+	        // Setup the connection with the DB
+	        db = DriverManager.getConnection(connectionString());
 		} catch (ClassNotFoundException | SQLException e ) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

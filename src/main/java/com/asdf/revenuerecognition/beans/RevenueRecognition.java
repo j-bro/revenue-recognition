@@ -1,4 +1,4 @@
-package com.asdf.revenuerecognition.models;
+package com.asdf.revenuerecognition.beans;
 
 import com.asdf.revenuerecognition.util.Money;
 

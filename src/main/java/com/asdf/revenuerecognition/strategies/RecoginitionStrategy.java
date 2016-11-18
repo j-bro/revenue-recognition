@@ -1,10 +1,10 @@
 package com.asdf.revenuerecognition.strategies;
 
 
-import com.asdf.revenuerecognition.models.Contract;
+import com.asdf.revenuerecognition.beans.ContractBean;
 
 public abstract class RecoginitionStrategy {
 	
-	public abstract void calculateRevenueRecognitions(Contract contract);
+	public abstract void calculateRevenueRecognitions(ContractBean contract);
 
 }

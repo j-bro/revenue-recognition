@@ -1,7 +1,7 @@
 package com.asdf.revenuerecognition.mappers;
 
-import com.asdf.revenuerecognition.models.AbstractModel;
-import com.asdf.revenuerecognition.models.PersonBean;
+import com.asdf.revenuerecognition.beans.AbstractBean;
+import com.asdf.revenuerecognition.beans.PersonBean;
 
 import java.util.Iterator;
 import java.util.List;
@@ -19,11 +19,11 @@ public class DataMapperTester {
 		
 		//test findALL
 		
-		List<AbstractModel> results = mapper.findbyLastName("Yuhong");
+		List<AbstractBean> results = mapper.findbyLastName("Yuhong");
 		if(results.size()==0)
 			System.out.println("Nothing found");
 		else{
-			Iterator<AbstractModel> it = results.iterator();
+			Iterator<AbstractBean> it = results.iterator();
 			while(it.hasNext()){
 				PersonBean p = (PersonBean) it.next();
 				System.out.println("Person with ID: " + p.getID().longValue()+ " "+

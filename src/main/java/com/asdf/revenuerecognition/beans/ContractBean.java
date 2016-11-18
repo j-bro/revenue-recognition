@@ -1,4 +1,4 @@
-package com.asdf.revenuerecognition.models;
+package com.asdf.revenuerecognition.beans;
 
 import com.asdf.revenuerecognition.util.Money;
 
@@ -7,16 +7,20 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class Contract extends AbstractModel {
+public class ContractBean extends AbstractBean {
 	
-	private Product product;
+	private ProductBean product;
 	private Money revenue;
 	private GregorianCalendar whenSigned;
-	//private Long id;
-	
+
 	private List<RevenueRecognition> recognitions = new ArrayList<>();
-	
-	public Contract(Product product, Money revenue, GregorianCalendar date){
+
+    /**
+     * No-arg constructor.
+     */
+    public ContractBean() {}
+
+	public ContractBean(ProductBean product, Money revenue, GregorianCalendar date){
 		this.product = product;
 		this.revenue = revenue;
 		this.whenSigned = date;
@@ -38,8 +42,6 @@ public class Contract extends AbstractModel {
 		return result;
 	}
 
-	
-
 	public void addRevenueRecognition(RevenueRecognition revenueRecognition) {
 		//System.out.println("In Contract.addRevenueRecognition amount: " + revenueRecognition.getAmount().getAmount()+"date:"+ revenueRecognition.getDate().getTime());
 		recognitions.add(revenueRecognition);
@@ -50,8 +52,6 @@ public class Contract extends AbstractModel {
 					r.getDate().getTime());
 			//System.out.println(r.isRecognizableBy(date));
 		}*/
-		
-		
 	}
 	
 	public void calculateRecognitions(){
@@ -59,13 +59,27 @@ public class Contract extends AbstractModel {
 	}
 
 	public Money getRevenue() {
-		// TODO Auto-generated method stub
 		return revenue;
 	}
-	
+
+	public void setRevenue(Money revenue) {
+		this.revenue = revenue;
+	}
+
 	public GregorianCalendar getWhenSigned() {
 		// TODO Auto-generated method stub
 		return whenSigned;
 	}
-	
+
+	public void setWhenSigned(GregorianCalendar whenSigned) {
+		this.whenSigned = whenSigned;
+	}
+
+    public ProductBean getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductBean product) {
+        this.product = product;
+    }
 }
