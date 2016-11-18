@@ -181,7 +181,7 @@ public abstract class AbstractMapper<T extends AbstractBean> {
      * @param model
      * @return
      */
-	protected Long insert(T model){
+	public Long insert(T model) {
 		if (db == null) {
             setConnection();
         }

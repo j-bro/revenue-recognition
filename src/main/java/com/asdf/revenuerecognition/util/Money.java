@@ -23,6 +23,14 @@ public class Money {
 
 	/**
 	 *
+	 * @return
+	 */
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	/**
+	 *
 	 * @param amount
 	 * @param currency
 	 */

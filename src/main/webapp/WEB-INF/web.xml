@@ -1,0 +1,47 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+    <display-name>Revenue Recognition</display-name>
+
+    <servlet>
+        <servlet-name>ContractController</servlet-name>
+        <servlet-class>com.asdf.revenuerecognition.controllers.ContractsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>com.asdf.revenuerecognition.controllers.ProductsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PopulateDb</servlet-name>
+        <servlet-class>com.asdf.revenuerecognition.controllers.PopulateDb</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ContractController</servlet-name>
+        <url-pattern>/contracts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductController</servlet-name>
+        <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PopulateDb</servlet-name>
+        <url-pattern>/populate</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <security-constraint>
+        <display-name>Restrict access to JSPs</display-name>
+        <web-resource-collection>
+            <web-resource-name>Restrict access to jsps</web-resource-name>
+            <url-pattern>/hidden/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+        </auth-constraint>
+    </security-constraint>
+</web-app>

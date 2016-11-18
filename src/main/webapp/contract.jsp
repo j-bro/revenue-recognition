@@ -7,15 +7,23 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<ul>
-    <li>ID is: ${contractBean.id}</li>
-    <li>Product is: ${contractBean.product}</li>
-    <li>Revenue is: ${contractBean.revenu}</li>
-</ul>
 
-</body>
+    <head>
+        <title>Title</title>
+    </head>
+
+    <body>
+        <header>
+            <h1>Contract #${contractBean.id}</h1>
+        </header>
+
+        <content>
+            <ul>
+                <li>ID is: ${contractBean.id}</li>
+                <li>Product is: ${contractBean.product}</li>
+                <li>Revenue is: ${contractBean.revenue.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}</li>
+            </ul>
+        </content>
+    </body>
+
 </html>

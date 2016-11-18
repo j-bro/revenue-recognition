@@ -1,7 +1,9 @@
 package com.asdf.revenuerecognition.controllers;
 
-import com.asdf.revenuerecognition.mappers.ContractMapper;
 import com.asdf.revenuerecognition.beans.ContractBean;
+import com.asdf.revenuerecognition.beans.ProductBean;
+import com.asdf.revenuerecognition.mappers.ContractMapper;
+import com.asdf.revenuerecognition.mappers.ProductMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,17 +15,17 @@ import java.io.PrintWriter;
 /**
  * Created by jeremybrown on 2016-11-18.
  */
-public class ContractController extends HttpServlet {
+public class ProductsController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         res.setContentType("text/html");
         PrintWriter out = res.getWriter();
-        Long contractId = Long.valueOf(req.getParameter("contractid"));
+        Long productId = Long.valueOf(req.getParameter("productid"));
 
-        ContractBean contractBean = new ContractMapper().find(contractId);
-        req.setAttribute("contractBean", contractBean);
+        ProductBean productBean = new ProductMapper().find(productId);
+        req.setAttribute("productBean", productBean);
 
-        req.getRequestDispatcher("./contract.jsp").forward(req, res);
+        req.getRequestDispatcher("./product.jsp").forward(req, res);
     }
 }
