@@ -1,0 +1,14 @@
+version: '2'
+services:
+  server:
+    image: "j-bro/revenue-recognition"
+    ports:
+      - '8080:8080'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - mariadb
+  mariadb:
+    image: 'mariadb'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}

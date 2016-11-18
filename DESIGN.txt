@@ -1,0 +1,17 @@
+# Revenue Recognition
+Submission for SOEN 387 - Fall 2016, Assignment #2
+Jeremy Brown ID 27515421
+
+## Design
+
+### Web Presentation Layer
+ - Using MVC
+ - Using Template View (JSPs)
+ - Using Page Controller (Servlets)
+
+### Business Logic Layer
+ - Using Domain Model (Beans)
+ - Using ?
+
+### Data Source Layer
+ - Using Data Mapper (ORM)

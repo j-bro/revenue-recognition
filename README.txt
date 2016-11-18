@@ -1,4 +1,4 @@
-# Library Catalog
+# Revenue Recognition
 Submission for SOEN 387 - Fall 2016, Assignment #2
 Jeremy Brown ID 27515421
 
@@ -6,6 +6,17 @@ Jeremy Brown ID 27515421
 
 
 ## Usage
+
+### App must
+ - Query the content of a contract from the database
+ - Calculate the revenue recognition of a contract & store the result in the database
+ - "Calculate the revenue for a contract and before a date"
+
+### Need to
+ - Delay load of object to memory until it is actually needed
+ - Check if an object is in memory before querying the database
+ - Maintain the modification status of an object before writing to the database
+ - Maintain data consistency when multiple users use the system concurrently
 
 
 ## Data
