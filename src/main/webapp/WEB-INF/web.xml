@@ -20,11 +20,11 @@
 
     <servlet-mapping>
         <servlet-name>ContractController</servlet-name>
-        <url-pattern>/contracts</url-pattern>
+        <url-pattern>/contract</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProductController</servlet-name>
-        <url-pattern>/products</url-pattern>
+        <url-pattern>/product</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PopulateDb</servlet-name>

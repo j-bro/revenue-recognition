@@ -1,8 +1,7 @@
 package com.asdf.revenuerecognition.mappers;
 
-
 import com.asdf.revenuerecognition.beans.ContractBean;
-import com.asdf.revenuerecognition.beans.ProductBean;
+import com.asdf.revenuerecognition.beans.RevenueRecognitionBean;
 import com.asdf.revenuerecognition.util.Money;
 
 import java.sql.PreparedStatement;
@@ -17,26 +16,27 @@ import java.util.List;
 /**
  * Created by jeremybrown on 2016-11-18.
  */
-public class ContractMapper extends AbstractMapper<ContractBean> {
+public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognitionBean> {
 
-    private static final String tableName = "contract";
+    private static final String tableName = "revenuerecognition";
 
     private static final String createContractsTableStatementString =
-            "CREATE TABLE " + tableName + " (ID int primary key, product int, revenue decimal, dateSigned date)";
+            "CREATE TABLE " + tableName + " (id int primary key, contract int, amount decimal, recognizedOn date)";
     private static final String findByIdStatementString = "select * from " + tableName + " where id=?";
     private static final String insertStatementString = "INSERT INTO " + tableName + " VALUES (?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
     private static final String findAllStatementString = "SELECT * from " + tableName;
+    private static final String findAllByContractStatementString = "SELECT * from " + tableName + " WHERE contract=%s";
 
     private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public ContractBean find(Long id) {
+    public RevenueRecognitionBean find(Long id) {
         return abstractFind(id);
     }
 
     @Override
-    public List<ContractBean> findAll() {
+    public List<RevenueRecognitionBean> findAll() {
         return abstractFindAll();
     }
 
@@ -65,40 +65,31 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
         return createContractsTableStatementString;
     }
 
-    @Override
-    protected void doInsert(ContractBean c, PreparedStatement stmt) throws SQLException {
-        stmt.setLong(1, c.getId());
-        stmt.setLong(2, c.getProduct().getId());
-        stmt.setLong(3, c.getRevenue().amount().longValue());
-        stmt.setString(4, format.format(c.getWhenSigned().getTime()));
-    }
-
     /**
      *
-     * @param c
+     * @return
      */
-    public void insertRevenueRecognitions(ContractBean c) {
-        RevenueRecognitionsMapper revenueRecognitionsMapper = new RevenueRecognitionsMapper();
-        c.getRecognitions().forEach(revenueRecognitionsMapper::insert);
+    public List<RevenueRecognitionBean> findAllByContract(ContractBean contract) {
+        String filledQuery = String.format(findAllByContractStatementString, contract.getId());
+        return abstractFindAllByQuery(filledQuery);
     }
 
     @Override
-    public Long insert(ContractBean model) {
-        Long contractId = super.insert(model);
-        model.getRecognitions().forEach(r -> r.setContractId(contractId));
-        insertRevenueRecognitions(model);
-        return contractId;
+    protected void doInsert(RevenueRecognitionBean r, PreparedStatement stmt) throws SQLException {
+        stmt.setLong(1, r.getId());
+        stmt.setLong(2, r.getContractId());
+        stmt.setLong(3, r.getAmount().amount().longValue());
+        stmt.setString(4, format.format(r.getDate().getTime()));
     }
 
     @Override
-    protected ContractBean doLoad(Long id, ResultSet rs) throws SQLException {
-        ContractBean contract = new ContractBean();
-        contract.setId(rs.getLong(1));
+    protected RevenueRecognitionBean doLoad(Long id, ResultSet rs) throws SQLException {
+        RevenueRecognitionBean revenueRecognition = new RevenueRecognitionBean();
+        revenueRecognition.setId(rs.getLong(1));
 
-        ProductBean p = new ProductMapper().find(rs.getLong(2));
-        contract.setProduct(p);
+        revenueRecognition.setContractId(rs.getLong(2));
 
-        contract.setRevenue(Money.dollars(rs.getLong(3)));
+        revenueRecognition.setAmount(Money.dollars(rs.getLong(3)));
 
         Date date = null;
         try {
@@ -108,11 +99,8 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
         }
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        contract.setWhenSigned(calendar);
+        revenueRecognition.setDate(calendar);
 
-        RevenueRecognitionsMapper revenueRecognitionsMapper = new RevenueRecognitionsMapper();
-        revenueRecognitionsMapper.findAllByContract(contract).forEach(contract::addRevenueRecognition);
-
-        return contract;
+        return revenueRecognition;
     }
 }

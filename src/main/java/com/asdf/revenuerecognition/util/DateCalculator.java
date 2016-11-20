@@ -25,7 +25,7 @@ public class DateCalculator {
 		return  new java.sql.Date(utilDate.getTime());
 	}
 	
-	public void dateTransform(){
+	public void dateTransform() {
 		java.util.Date utilDate = new java.util.Date();
 	    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 	    System.out.println("utilDate:" + utilDate);

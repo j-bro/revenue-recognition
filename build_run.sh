@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-set -e
 
 if [ $1 = "clean" ]; then
     echo "Removing existing containers"
     docker rm revenuerecognition_mariadb_1
     docker rm revenuerecognition_server_1
 fi
+
+set -e
+
+export MYSQL_ROOT_PASSWORD=hello
 
 echo "Building DB Image"
 docker build -t j-bro/revenue-recognition-sql database/

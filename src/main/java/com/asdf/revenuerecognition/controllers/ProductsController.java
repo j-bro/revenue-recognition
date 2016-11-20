@@ -1,8 +1,6 @@
 package com.asdf.revenuerecognition.controllers;
 
-import com.asdf.revenuerecognition.beans.ContractBean;
 import com.asdf.revenuerecognition.beans.ProductBean;
-import com.asdf.revenuerecognition.mappers.ContractMapper;
 import com.asdf.revenuerecognition.mappers.ProductMapper;
 
 import javax.servlet.ServletException;

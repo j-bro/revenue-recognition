@@ -26,7 +26,10 @@ import java.util.Map;
  */
 
 public abstract class AbstractMapper<T extends AbstractBean> {
-	
+
+    private static final String connectionString = "jdbc:mysql://mariadb:3306/revenuerecognition?user=root&password="
+            + System.getenv("MYSQL_ROOT_PASSWORD");
+
 	/**
 	 * loadedMap implements the pattern IdentityMap from [PoEAA, p195]
 	 * If to find a domain object, first check if this object is in memory, ie.
@@ -36,12 +39,14 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 	
 	private Connection db;
 
+    protected String connectionString() {
+        return connectionString;
+    }
+
 	/**
 	 * the return string is domain specific
 	 */
 	protected abstract String findStatement();
-
-	protected abstract String connectionString();
 
     protected abstract String lastIDStatement();
 
@@ -101,26 +106,30 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 		return result;		
 	}
 
+	protected List<T> abstractFindAllByQuery(String query) {
+        if (db == null) {
+            setConnection();
+        }
+
+        List<T> result = null;
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = db.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            return loadAll(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      *
      * @return
      */
 	protected List<T> abstractFindAll() {
-		if (db == null) {
-            setConnection();
-        }
-
-		List<T> result = null;
-		PreparedStatement stmt = null;
-		
-		try {
-			stmt = db.prepareStatement(findAllStatement());
-			ResultSet rs = stmt.executeQuery();
-			return loadAll(rs);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-		return result;
+		return abstractFindAllByQuery(findAllStatement());
 	}
 
     /**
@@ -197,7 +206,6 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 		} catch(SQLException e) {
             e.printStackTrace();
 		}
-
 		return model.getId();
 	}
 

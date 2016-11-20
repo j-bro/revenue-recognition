@@ -1,6 +1,10 @@
 package com.asdf.revenuerecognition.beans;
 
 import com.asdf.revenuerecognition.strategies.RecoginitionStrategy;
+import com.asdf.revenuerecognition.util.Money;
+
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class ProductBean extends AbstractBean {
 
@@ -25,10 +29,12 @@ public class ProductBean extends AbstractBean {
 
 	/**
 	 *
-	 * @param contract
+	 * @param revenue
+	 * @param whenSigned
+	 * @return
 	 */
-	public void calculateRevenueRecognition(ContractBean contract) {
-		recognitionStrategy.calculateRevenueRecognitions(contract);
+	public List<RevenueRecognitionBean> calculateRevenueRecognition(Money revenue, GregorianCalendar whenSigned) {
+		return recognitionStrategy.calculateRevenueRecognitions(revenue, whenSigned);
 	}
 
 	/**
@@ -47,4 +53,19 @@ public class ProductBean extends AbstractBean {
 		this.name = name;
 	}
 
+    /**
+     *
+     * @return
+     */
+    public RecoginitionStrategy getRecognitionStrategy() {
+        return recognitionStrategy;
+    }
+
+    /**
+     *
+     * @param recognitionStrategy
+     */
+    public void setRecognitionStrategy(RecoginitionStrategy recognitionStrategy) {
+        this.recognitionStrategy = recognitionStrategy;
+    }
 }

@@ -19,11 +19,11 @@
         <content>
             <ul>
                 <li>
-                    <c:url var="contractsUrl" value="contracts" />
+                    <c:url var="contractsUrl" value="contractList.jsp" />
                     <a href="${contractsUrl}">Contracts</a>
                 </li>
                 <li>
-                    <c:url var="productsUrl" value="products" />
+                    <c:url var="productsUrl" value="productList.jsp" />
                     <a href="${productsUrl}">Products</a>
                 </li>
             </ul>

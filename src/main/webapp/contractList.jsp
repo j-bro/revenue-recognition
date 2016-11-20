@@ -27,7 +27,7 @@
                         <c:param name="contractid" value="${contract.id}"></c:param>
                     </c:url>
                     <a href="${contractUrl}">
-                        [<c:out value="${contract.id}"/>] <c:out value="${contract.product}"/> (<c:out value="${contract.revenue.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}"/>)
+                        [<c:out value="${contract.id}"/>] <c:out value="${contract.product.name}"/> (<c:out value="${contract.revenue.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}"/>)
                     </a>
                 </li>
                 </c:forEach>
