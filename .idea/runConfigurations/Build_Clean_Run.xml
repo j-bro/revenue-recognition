@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Stop Docker Container" type="BashConfigurationType" factoryName="Bash">
+  <configuration default="false" name="Build Clean Run" type="BashConfigurationType" factoryName="Bash">
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="INTERPRETER_PATH" value="/bin/bash" />
     <option name="WORKING_DIRECTORY" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/stop_rev_rec_docker.sh" />
-    <option name="PARAMETERS" value="" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/build_run.sh" />
+    <option name="PARAMETERS" value="clean" />
     <module name="" />
     <envs />
     <method>
