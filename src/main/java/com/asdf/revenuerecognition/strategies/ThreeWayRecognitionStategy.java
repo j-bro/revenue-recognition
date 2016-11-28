@@ -26,6 +26,22 @@ public class ThreeWayRecognitionStategy extends RecoginitionStrategy {
 		return STRATEGY_NAME;
 	}
 
+	public int getFirstRecognitionOffset() {
+		return firstRecognitionOffset;
+	}
+
+	public void setFirstRecognitionOffset(int firstRecognitionOffset) {
+		this.firstRecognitionOffset = firstRecognitionOffset;
+	}
+
+	public int getSecondRecognitionOffset() {
+		return secondRecognitionOffset;
+	}
+
+	public void setSecondRecognitionOffset(int secondRecognitionOffset) {
+		this.secondRecognitionOffset = secondRecognitionOffset;
+	}
+
 	@Override
 	public List<RevenueRecognitionBean> calculateRevenueRecognitions(Money revenue, GregorianCalendar whenSigned) {
         List<RevenueRecognitionBean> revenueRecognitionList = new ArrayList<>();
@@ -39,5 +55,11 @@ public class ThreeWayRecognitionStategy extends RecoginitionStrategy {
 
         return revenueRecognitionList;
 	}
+
+
+    @Override
+    public String toString() {
+        return getName() + " (" + getFirstRecognitionOffset() + ", " + getSecondRecognitionOffset() + ")";
+    }
 
 }

@@ -2,6 +2,9 @@ package com.asdf.revenuerecognition.mappers;
 
 
 import com.asdf.revenuerecognition.beans.ProductBean;
+import com.asdf.revenuerecognition.strategies.CompleteRecognitionStategy;
+import com.asdf.revenuerecognition.strategies.RecoginitionStrategy;
+import com.asdf.revenuerecognition.strategies.ThreeWayRecognitionStategy;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,10 +19,8 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
 
     private static final String tableName = "product";
 
-    private static final String createContractsTableStatementString =
-            "CREATE TABLE " + tableName + " (id int primary key, name varchar(50))";
     private static final String findByIdStatementString = "select * FROM " + tableName + " WHERE id=?";
-    private static final String insertStatementString = "INSERT INTO " +  tableName + " VALUES (?,?)";
+    private static final String insertStatementString = "INSERT INTO " +  tableName + " VALUES (?,?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
     private static final String findAllStatementString = "SELECT * FROM " + tableName;
 
@@ -63,14 +64,25 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
     }
 
     @Override
-    protected String createTableStatement() {
-        return createContractsTableStatementString;
-    }
-
-    @Override
     protected void doInsert(ProductBean p, PreparedStatement stmt) throws SQLException {
         stmt.setLong(1, p.getId());
         stmt.setString(2, p.getName());
+        if (p.getRecognitionStrategy() != null) {
+            stmt.setString(3, p.getRecognitionStrategy().getName());
+            if (p.getRecognitionStrategy() instanceof ThreeWayRecognitionStategy) {
+                stmt.setLong(4, ((ThreeWayRecognitionStategy) p.getRecognitionStrategy()).getFirstRecognitionOffset());
+                stmt.setLong(5, ((ThreeWayRecognitionStategy) p.getRecognitionStrategy()).getSecondRecognitionOffset());
+            }
+            else {
+                stmt.setString(4, null);
+                stmt.setString(5, null);
+            }
+        }
+        else {
+            stmt.setString(3, null);
+            stmt.setString(4, null);
+            stmt.setString(5, null);
+        }
     }
 
     @Override
@@ -78,6 +90,18 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
         ProductBean product = new ProductBean();
         product.setId(rs.getLong(1));
         product.setName(rs.getString(2));
+
+        String strategyName = rs.getString(3);
+        if (strategyName != null) {
+            int offset1 = rs.getInt(4);
+            int offset2 = rs.getInt(5);
+            if (offset1 != 0 && offset2 != 0) {
+                product.setRecognitionStrategy(new ThreeWayRecognitionStategy(offset1, offset2));
+            } else {
+                product.setRecognitionStrategy(new CompleteRecognitionStategy());
+            }
+        }
+
         return product;
     }
 

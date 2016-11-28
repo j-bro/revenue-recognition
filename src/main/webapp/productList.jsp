@@ -14,27 +14,30 @@
 </head>
 
 <body>
-<header>
-    <h1>Products</h1>
-</header>
+    <header>
+        <a href="index.jsp">
+            <h1>Revenue Recognition</h1>
+        </a>
+        <h2>Products</h2>
+    </header>
 
-<content>
-    <jsp:useBean id="mapper" class="com.asdf.revenuerecognition.mappers.ProductMapper" scope="request" />
-    <ul>
+    <content>
+        <jsp:useBean id="mapper" class="com.asdf.revenuerecognition.mappers.ProductMapper" scope="request" />
+        <ul>
 
-        <c:forEach var="product" items="${mapper.findAll()}">
-            <li>
-                <c:url var="contractUrl" value="product">
-                    <c:param name="productid" value="${product.id}"></c:param>
-                </c:url>
-                <a href="${contractUrl}">
-                    [<c:out value="${product.id}"/>] <c:out value="${product.name}"/>
-                </a>
-            </li>
-        </c:forEach>
+            <c:forEach var="product" items="${mapper.findAll()}">
+                <li>
+                    <c:url var="contractUrl" value="product">
+                        <c:param name="productid" value="${product.id}"></c:param>
+                    </c:url>
+                    <a href="${contractUrl}">
+                        [<c:out value="${product.id}"/>] <c:out value="${product.name}"/>
+                    </a>
+                </li>
+            </c:forEach>
 
-    </ul>
-</content>
+        </ul>
+    </content>
 </body>
 
 </html>

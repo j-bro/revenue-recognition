@@ -23,10 +23,11 @@ public class ContractBean extends AbstractBean {
 		this.product = product;
 		this.revenue = revenue;
 		this.whenSigned = date;
+		calculateRecognitions();
 	}
 	
 	public Money getRecognizedRevenue(GregorianCalendar date) {
-		if(recognitions.isEmpty()) {
+		if (recognitions.isEmpty()) {
             calculateRecognitions();
         }
 
@@ -44,10 +45,12 @@ public class ContractBean extends AbstractBean {
 	}
 
 	public void calculateRecognitions() {
-        List<RevenueRecognitionBean> revenueRecognitions =
-                product.calculateRevenueRecognition(this.getRevenue(), this.getWhenSigned());
-		revenueRecognitions.forEach(r -> r.setContractId(this.getId()));
-		revenueRecognitions.forEach(this::addRevenueRecognition);
+        if (recognitions.isEmpty()) {
+            List<RevenueRecognitionBean> revenueRecognitions =
+                    product.calculateRevenueRecognition(this.getRevenue(), this.getWhenSigned());
+            revenueRecognitions.forEach(r -> r.setContractId(this.getId()));
+            revenueRecognitions.forEach(this::addRevenueRecognition);
+        }
 	}
 
 	public Money getRevenue() {

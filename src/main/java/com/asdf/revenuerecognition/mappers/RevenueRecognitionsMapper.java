@@ -20,8 +20,6 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
 
     private static final String tableName = "revenuerecognition";
 
-    private static final String createContractsTableStatementString =
-            "CREATE TABLE " + tableName + " (id int primary key, contract int, amount decimal, recognizedOn date)";
     private static final String findByIdStatementString = "select * from " + tableName + " where id=?";
     private static final String insertStatementString = "INSERT INTO " + tableName + " VALUES (?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
@@ -60,11 +58,6 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
         return findAllStatementString;
     }
 
-    @Override
-    protected String createTableStatement() {
-        return createContractsTableStatementString;
-    }
-
     /**
      *
      * @return
@@ -78,7 +71,7 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
     protected void doInsert(RevenueRecognitionBean r, PreparedStatement stmt) throws SQLException {
         stmt.setLong(1, r.getId());
         stmt.setLong(2, r.getContractId());
-        stmt.setLong(3, r.getAmount().amount().longValue());
+        stmt.setBigDecimal(3, r.getAmount().amount());
         stmt.setString(4, format.format(r.getDate().getTime()));
     }
 
@@ -89,17 +82,17 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
 
         revenueRecognition.setContractId(rs.getLong(2));
 
-        revenueRecognition.setAmount(Money.dollars(rs.getLong(3)));
+        revenueRecognition.setAmount(Money.dollars(rs.getDouble(3)));
 
         Date date = null;
         try {
             date = format.parse(rs.getString(4)); // mysql datetime format
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            revenueRecognition.setDate(calendar);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        revenueRecognition.setDate(calendar);
 
         return revenueRecognition;
     }

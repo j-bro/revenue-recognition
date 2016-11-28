@@ -13,7 +13,9 @@
 
     <body>
         <header>
-            <h1>Revenue Recognition</h1>
+            <a href="index.jsp">
+                <h1>Revenue Recognition</h1>
+            </a>
         </header>
 
         <content>

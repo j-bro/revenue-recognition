@@ -42,19 +42,16 @@ public class PopulateDb extends HttpServlet {
         ContractMapper contractMapper = new ContractMapper();
         out.write("Creating contract 1<br/>");
         ContractBean contract1 = new ContractBean(dbProduct, Money.dollars(1000), GregorianCalendar.from(ZonedDateTime.now()));
-        contract1.calculateRecognitions();
         contractMapper.insert(contract1);
         out.write("Inserted contract 1<br/>");
 
         out.write("Creating contract 2<br/>");
         ContractBean contract2 = new ContractBean(wordProduct, Money.dollars(10), GregorianCalendar.from(ZonedDateTime.now()));
-        contract2.calculateRecognitions();
         contractMapper.insert(contract2);
         out.write("Inserted contract 2<br/>");
 
         out.write("Creating contract 3<br/>");
         ContractBean contract3 = new ContractBean(spreadsheetProduct, Money.dollars(100), GregorianCalendar.from(ZonedDateTime.now()));
-        contract3.calculateRecognitions();
         contractMapper.insert(contract3);
         out.write("Inserted contract 3<br/>");
 

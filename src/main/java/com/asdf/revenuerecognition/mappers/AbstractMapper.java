@@ -54,8 +54,6 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 
 	protected abstract String findAllStatement();
 
-    protected abstract String createTableStatement();
-
 	public abstract T find(Long id);
 
     public abstract List<T> findAll();
@@ -166,27 +164,6 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 
     /**
      *
-     * @return
-     */
-	protected boolean createTable() {
-        if (db == null) {
-            setConnection();
-        }
-
-        PreparedStatement stmt = null;
-        int statementResult = 1;
-        try {
-            stmt = db.prepareStatement(createTableStatement());
-            statementResult = stmt.executeUpdate();
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return statementResult == 0;
-    }
-
-    /**
-     *
      * @param model
      * @return
      */
@@ -201,6 +178,7 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 			model.setId(findNextDatabaseId());
 			stmt.setInt(1, model.getId().intValue());
 			doInsert(model, stmt);
+			System.out.println(stmt.toString());
 			stmt.executeUpdate();
 			loadedMap.put(model.getClass(), model);
 		} catch(SQLException e) {

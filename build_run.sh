@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+docker-compose stop
+
 if [ $1 = "clean" ]; then
     echo "Removing existing containers"
     docker rm revenuerecognition_mariadb_1

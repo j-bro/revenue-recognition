@@ -22,7 +22,7 @@ public class ProductBean extends AbstractBean {
 	 * @param name
 	 * @param strategy
 	 */
-	public ProductBean(String name, RecoginitionStrategy strategy){
+	public ProductBean(String name, RecoginitionStrategy strategy) {
 		this.setName(name);
 		this.recognitionStrategy = strategy;
 	}
@@ -68,4 +68,5 @@ public class ProductBean extends AbstractBean {
     public void setRecognitionStrategy(RecoginitionStrategy recognitionStrategy) {
         this.recognitionStrategy = recognitionStrategy;
     }
+
 }

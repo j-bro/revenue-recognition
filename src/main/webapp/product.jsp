@@ -13,13 +13,17 @@
 
     <body>
     <header>
-        <h1>Product #${productBean.id}</h1>
+        <a href="index.jsp">
+            <h1>Revenue Recognition</h1>
+        </a>
+        <h2>Product #${productBean.id}</h2>
     </header>
 
     <content>
         <ul>
-            <li>ID is: ${productBean.id}</li>
-            <li>Name is: ${productBean.name}</li>
+            <li>ID: ${productBean.id}</li>
+            <li>Name: ${productBean.name}</li>
+            <li>Recognition strategy: ${productBean.recognitionStrategy.toString()}</li>
         </ul>
     </content>
     </body>

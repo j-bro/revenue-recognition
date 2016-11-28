@@ -15,7 +15,10 @@
 
         <body>
         <header>
-            <h1>Contract #${contractBean.id}</h1>
+            <a href="index.jsp">
+                <h1>Revenue Recognition</h1>
+            </a>
+            <h2>Contract #${contractBean.id}</h2>
         </header>
 
         <content>

@@ -21,8 +21,6 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
 
     private static final String tableName = "contract";
 
-    private static final String createContractsTableStatementString =
-            "CREATE TABLE " + tableName + " (ID int primary key, product int, revenue decimal, dateSigned date)";
     private static final String findByIdStatementString = "select * from " + tableName + " where id=?";
     private static final String insertStatementString = "INSERT INTO " + tableName + " VALUES (?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
@@ -58,11 +56,6 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
     @Override
     protected String findAllStatement() {
         return findAllStatementString;
-    }
-
-    @Override
-    protected String createTableStatement() {
-        return createContractsTableStatementString;
     }
 
     @Override

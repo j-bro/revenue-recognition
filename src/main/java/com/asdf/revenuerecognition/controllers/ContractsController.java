@@ -1,8 +1,11 @@
 package com.asdf.revenuerecognition.controllers;
 
+import com.asdf.revenuerecognition.beans.ProductBean;
 import com.asdf.revenuerecognition.mappers.ContractMapper;
 import com.asdf.revenuerecognition.beans.ContractBean;
+import com.asdf.revenuerecognition.mappers.ProductMapper;
 import com.asdf.revenuerecognition.util.DateCalculator;
+import com.asdf.revenuerecognition.util.Money;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +28,6 @@ public class ContractsController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         res.setContentType("text/html");
-        PrintWriter out = res.getWriter();
         String contractIdString = req.getParameter("contractid");
         ContractBean contractBean = null;
         if (contractIdString != null) {
@@ -51,10 +53,78 @@ public class ContractsController extends HttpServlet {
                 req.setAttribute("dateString", dateString);
                 req.setAttribute("recognizedRevenueBeforeDate", contractBean.getRecognizedRevenue(dateBefore));
             } catch (DateTimeException e) {
-//                req.setAttribute("invalidParameters", true);
+                // Invalid/no date specified
             }
         }
 
         req.getRequestDispatcher("./contract.jsp").forward(req, res);
+    }
+
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        // Get request parameters
+        String productIdString = req.getParameter("productid");
+        String contractRevenueString = req.getParameter("contract-revenue");
+        String dateInputString = req.getParameter("date-input");
+
+        // Parse string parameters
+        Long productId = null;
+        try {
+            productId = Long.parseLong(productIdString);
+        } catch (NumberFormatException e) {
+            writeError(res, "Invalid product ID");
+            return;
+        }
+        if (productId == null) {
+            writeError(res, "Invalid product ID");
+            return;
+        }
+
+        Double contractRevenue = null;
+        try {
+            contractRevenue = Double.parseDouble(contractRevenueString);
+        } catch (NumberFormatException e) {
+            writeError(res, "Invalid revenue value");
+            return;
+        }
+        if (contractRevenue == null) {
+            writeError(res, "Invalid product ID");
+            return;
+        }
+
+        LocalDate d = null;
+        try {
+            d = LocalDate.parse(dateInputString);
+        } catch (NumberFormatException | DateTimeParseException e) {
+            writeError(res, "Invalid date");
+            return;
+        }
+        if (d == null) {
+            writeError(res, "Invalid product ID");
+            return;
+        }
+        GregorianCalendar whenSigned = GregorianCalendar.from(d.atStartOfDay(ZoneOffset.UTC));
+
+        // Get product object
+        ProductBean prod = new ProductMapper().find(productId);
+        if (prod == null) {
+            writeError(res, "Invalid product ID");
+            return;
+        }
+        ContractBean newContract = new ContractBean(prod, Money.dollars(contractRevenue), whenSigned);
+        new ContractMapper().insert(newContract);
+
+        // Redirect to new contract
+        res.sendRedirect(String.format("contract?contractid=%s", newContract.getId()));
+    }
+
+    /**
+     * Write the specified string to the output of the specified response.
+     * @param response the response
+     * @param errorMsg the error message
+     * @throws IOException if unable to get the response's writer object
+     */
+    private void writeError(HttpServletResponse response, String errorMsg) throws IOException {
+        response.getWriter().write(errorMsg);
     }
 }

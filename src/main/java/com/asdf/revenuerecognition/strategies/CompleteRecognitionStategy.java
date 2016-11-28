@@ -24,4 +24,9 @@ public class CompleteRecognitionStategy extends RecoginitionStrategy {
         return revenueRecognitionList;
 	}
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 }
