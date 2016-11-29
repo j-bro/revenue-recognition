@@ -24,9 +24,19 @@ Jeremy Brown ID 27515421
 
 ## How to run
 
+### Database setup
+To initialize the database tables, run the db-init.sql script in your MySQL database.
+
+### Populate initial data
+Once the server is running, you can populate the database with some dummy data by making a POST request to 'http://<your-server-ip>/revenue-recognition/populate'.
+
 ### War
 The project can be easily deployed on any container web server using the provided 'revenue-recognition.war' archive.
 For example, using Tomcat simply upload the WAR file from the admin server manager page.
+To enable connection to the database, set the following environment variables accordingly (examples given):
+ - MYSQL_HOST=localhost
+ - MYSQL_PORT=3306
+ - MYSQL_ROOT_PASSWORD=rootroot
 
 The service will be available at 'http://<your-server-ip>/revenue-recognition/'.
 
@@ -34,7 +44,10 @@ The service will be available at 'http://<your-server-ip>/revenue-recognition/'.
 The source code of the project can be found under the 'src/' directory, however this does not contain the project build files.
 The full project build files can be found at 'https://github.com/j-bro/revenue-recognition/archive/submission.zip'.
 From the project root directory, run './gradlew build' to generate the WAR file.
-Bonus: if you have Docker installed on your local machine, you can generate a Dockerfile from which you can then start a container by running './gradlew createDockerfile'.
-You should also be able to directly start a container by running './gradlew startContainer' (no guarantees on this though).
+
+
+Bonus: if you have Docker installed on your local machine, you can generate a Dockerfile by running ./gradlew createDockerfile.
+This Dockerfile can be used to start a container running a Tomcat server with the application already installed.
+Be sure to pass the environment variables to the container using the -e flag.
 
 (c) 2016 Jeremy Brown

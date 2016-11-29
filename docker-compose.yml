@@ -6,6 +6,8 @@ services:
       - '8080:8080'
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_HOSTNAME=mariadb
+      - MYSQL_PORT=3306
     depends_on:
       - mariadb
   mariadb:

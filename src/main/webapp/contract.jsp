@@ -11,52 +11,55 @@
     <c:if test="${invalidParameters ne true}">
         <head>
             <title>Contract #${contractBean.id}</title>
+            <%@include file="hidden/header-imports.jsp"%>
         </head>
 
         <body>
-        <header>
-            <a href="index.jsp">
-                <h1>Revenue Recognition</h1>
-            </a>
-            <h2>Contract #${contractBean.id}</h2>
-        </header>
+            <%@include file="hidden/navbar.jsp"%>
+            <div class="container">
+                <div class="section">
+                    <h3>Contract #${contractBean.id}</h3>
+                </div>
 
-        <content>
-            <section>
-                <ul>
-                    <li>ID is: ${contractBean.id}</li>
-                    <li>Product is: ${contractBean.product.name}</li>
-                    <li>Revenue is: ${contractBean.revenue.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}</li>
-                    <li>Revenue Recognitions:
-                        <ul>
-                            <c:forEach var="recognition" items="${contractBean.getRecognitions()}">
-                                <li>${recognition.getAmount().amount()} on ${recognition.getDateString()}</li>
-                            </c:forEach>
-                        </ul>
-                    </li>
-                </ul>
-            </section>
+                <div class="section">
+                    <div class="row">
+                        <div class="col s6">
+                            <h5>Product: <a href="product?productid=${contractBean.product.id}">${contractBean.product.name}</a></h5>
+                            <h5>Total Revenue: ${contractBean.revenue.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}</h5>
 
-            <section>
-                <h3>Get revenue before a date</h3>
-                <form id="recognized-revenue-form" method="get">
-                    <label>Date (yyyy-mm-dd): </label>
-                    <input id="date-input" name="date-input" type="date" />
-                    <input type="hidden" name="contractid" value="${param.contractid}">
-                    <button type="submit">Submit</button>
-                </form>
+                            <div class="divider"></div>
 
-                <c:if test="${not empty dateString}">
-                    <h4>Revenue before date ${dateString}</h4>
-                    <h4>${recognizedRevenueBeforeDate.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}</h4>
-                </c:if>
-            </section>
-        </content>
+                            <h6>Get revenue before a date</h6>
+                            <form id="recognized-revenue-form" method="get">
+                                <label>Date (yyyy-mm-dd): </label>
+                                <input id="date-input" name="date-input" type="date" />
+                                <input type="hidden" name="contractid" value="${param.contractid}">
+                                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+
+                            <c:if test="${not empty dateString}">
+                                <h5>Revenue before: ${dateString}</h5>
+                                <h6>${recognizedRevenueBeforeDate.getAmount()} ${contract.revenue.getCurrency().getCurrencyCode()}</h6>
+                            </c:if>
+                        </div>
+                        <div class="col s6">
+                            <h4>Revenue Recognitions</h4>
+                            <ul class="collection">
+                                <c:forEach var="recognition" items="${contractBean.getRecognitions()}">
+                                    <li class="collection-item">${recognition.getAmount().amount()} on ${recognition.getDateString()}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </body>
     </c:if>
 
     <c:if test="${invalidParameters eq true}">
-        <h1>Invalid parameters</h1>
+        <h3>Invalid parameters</h3>
     </c:if>
 
 

@@ -11,33 +11,42 @@
 
 <head>
     <title>Products</title>
+    <%@include file="hidden/header-imports.jsp"%>
 </head>
 
 <body>
-    <header>
-        <a href="index.jsp">
-            <h1>Revenue Recognition</h1>
-        </a>
-        <h2>Products</h2>
-    </header>
+<%@include file="hidden/navbar.jsp"%>
+    <div class="container">
+        <div class="section">
+            <h3>Products</h3>
+        </div>
+        <div class="section">
+            <div class="row">
+                <div class="col s6">
+                    <jsp:useBean id="mapper" class="com.asdf.revenuerecognition.mappers.ProductMapper" scope="request" />
+                    <ul class="collection">
+                        <c:if test="${empty mapper.findAll()}">
+                            <li class="collection-item">No products found</li>
+                        </c:if>
 
-    <content>
-        <jsp:useBean id="mapper" class="com.asdf.revenuerecognition.mappers.ProductMapper" scope="request" />
-        <ul>
+                        <c:if test="${not empty mapper.findAll()}">
+                            <c:forEach var="product" items="${mapper.findAll()}">
+                                <li class="collection-item">
+                                    <c:url var="contractUrl" value="product">
+                                        <c:param name="productid" value="${product.id}"></c:param>
+                                    </c:url>
+                                    <a href="${contractUrl}">
+                                        [<c:out value="${product.id}"/>] <c:out value="${product.name}"/>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </c:if>
 
-            <c:forEach var="product" items="${mapper.findAll()}">
-                <li>
-                    <c:url var="contractUrl" value="product">
-                        <c:param name="productid" value="${product.id}"></c:param>
-                    </c:url>
-                    <a href="${contractUrl}">
-                        [<c:out value="${product.id}"/>] <c:out value="${product.name}"/>
-                    </a>
-                </li>
-            </c:forEach>
+                    </ul>
+                </div>
+        </div>
 
-        </ul>
-    </content>
+    </div>
 </body>
 
 </html>

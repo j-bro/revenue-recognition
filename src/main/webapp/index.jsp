@@ -9,26 +9,24 @@
 <html>
     <head>
         <title>Revenue Recognition</title>
+        <%@include file="hidden/header-imports.jsp"%>
     </head>
 
     <body>
-        <header>
-            <a href="index.jsp">
-                <h1>Revenue Recognition</h1>
-            </a>
-        </header>
-
-        <content>
-            <ul>
-                <li>
-                    <c:url var="contractsUrl" value="contractList.jsp" />
-                    <a href="${contractsUrl}">Contracts</a>
-                </li>
-                <li>
-                    <c:url var="productsUrl" value="productList.jsp" />
-                    <a href="${productsUrl}">Products</a>
-                </li>
-            </ul>
-        </content>
+    <%@include file="hidden/navbar.jsp"%>
+        <div class="container">
+            <div class="section">
+                <div class="row">
+                    <div class="col s6">
+                        <c:url var="contractsUrl" value="contractList.jsp" />
+                        <h3 class="center"><a href="${contractsUrl}">Contracts</a></h3>
+                    </div>
+                    <div class="col s6">
+                        <c:url var="productsUrl" value="productList.jsp" />
+                        <h3 class="center"><a href="${productsUrl}">Products</a></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

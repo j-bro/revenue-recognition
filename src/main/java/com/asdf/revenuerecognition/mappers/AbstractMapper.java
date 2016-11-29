@@ -27,8 +27,9 @@ import java.util.Map;
 
 public abstract class AbstractMapper<T extends AbstractBean> {
 
-    private static final String connectionString = "jdbc:mysql://mariadb:3306/revenuerecognition?user=root&password="
-            + System.getenv("MYSQL_ROOT_PASSWORD");
+    private static final String connectionString = "jdbc:mysql://" + System.getenv("MYSQL_HOSTNAME") + ":"
+			+ System.getenv("MYSQL_PORT") + "/revenuerecognition?user=root&password="
+			+ System.getenv("MYSQL_ROOT_PASSWORD");
 
 	/**
 	 * loadedMap implements the pattern IdentityMap from [PoEAA, p195]
@@ -178,7 +179,6 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 			model.setId(findNextDatabaseId());
 			stmt.setInt(1, model.getId().intValue());
 			doInsert(model, stmt);
-			System.out.println(stmt.toString());
 			stmt.executeUpdate();
 			loadedMap.put(model.getClass(), model);
 		} catch(SQLException e) {

@@ -9,23 +9,27 @@
 
     <head>
         <title>Product #${productBean.id}</title>
+        <%@include file="hidden/header-imports.jsp"%>
     </head>
 
     <body>
-    <header>
-        <a href="index.jsp">
-            <h1>Revenue Recognition</h1>
-        </a>
-        <h2>Product #${productBean.id}</h2>
-    </header>
+    <%@include file="hidden/navbar.jsp"%>
+        <div class="container">
 
-    <content>
-        <ul>
-            <li>ID: ${productBean.id}</li>
-            <li>Name: ${productBean.name}</li>
-            <li>Recognition strategy: ${productBean.recognitionStrategy.toString()}</li>
-        </ul>
-    </content>
+            <div class="section">
+                <h3>Product #${productBean.id}</h3>
+            </div>
+
+            <div class="section">
+                <div class="row">
+                    <div class="col s12">
+                        <h5>Name: ${productBean.name}</h5>
+                        <h5>Recognition strategy: ${productBean.recognitionStrategy.toString()}</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </body>
 
 </html>

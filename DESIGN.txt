@@ -5,13 +5,18 @@ Jeremy Brown ID 27515421
 ## Design
 
 ### Web Presentation Layer
- - Using MVC
- - Using Template View (JSPs)
- - Using Page Controller (Servlets)
+ - Using MVC: ContractBean, ProductBean, RevenueRecognitionBean are the models.
+ - Using Template View (JSPs): index.jsp, contractList.jsp, contract.jsp, productList.jsp, product.jsp are the views.
+ - Using Page Controller (Servlets): ContractsController, ProductsController are the controllers.
 
 ### Business Logic Layer
- - Using Domain Model (Beans)
- - Using ?
+ - Using Domain Model (Beans): ContractBean, ProductBean, RevenueRecognitionBean hold the data state.
 
 ### Data Source Layer
- - Using Data Mapper (ORM)
+ - Using Data Mapper (ORM): ContractMapper, ProductMapper, RevenueRecognitionMapper bridge the connection between
+    the domain model objects and the database tables & rows.
+
+### Revenue Recognition strategies
+ - Using the Strategy pattern: CompleteRecognitionStrategy & ThreeWayRecognitionStrategy both conform to the interface
+    given in RecognitionStrategy. Regardless of the implementation, each contract can call calculateRevenueRecognitions()
+    and the computation will be delegated to the appropriate strategy.
