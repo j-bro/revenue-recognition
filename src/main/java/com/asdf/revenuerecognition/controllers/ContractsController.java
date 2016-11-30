@@ -1,6 +1,7 @@
 package com.asdf.revenuerecognition.controllers;
 
 import com.asdf.revenuerecognition.beans.ProductBean;
+import com.asdf.revenuerecognition.mappers.AbstractMapper;
 import com.asdf.revenuerecognition.mappers.ContractMapper;
 import com.asdf.revenuerecognition.beans.ContractBean;
 import com.asdf.revenuerecognition.mappers.ProductMapper;
@@ -62,60 +63,71 @@ public class ContractsController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-        // Get request parameters
-        String productIdString = req.getParameter("productid");
-        String contractRevenueString = req.getParameter("contract-revenue");
-        String dateInputString = req.getParameter("date-input");
+        // Determine request type
+        boolean deletePost = req.getParameter("actiontype").equals("delete");
 
-        // Parse string parameters
-        Long productId = null;
-        try {
-            productId = Long.parseLong(productIdString);
-        } catch (NumberFormatException e) {
-            writeError(res, "Invalid product ID");
-            return;
-        }
-        if (productId == null) {
-            writeError(res, "Invalid product ID");
-            return;
-        }
+        ContractMapper mapper = new ContractMapper();
 
-        Double contractRevenue = null;
-        try {
-            contractRevenue = Double.parseDouble(contractRevenueString);
-        } catch (NumberFormatException e) {
-            writeError(res, "Invalid revenue value");
-            return;
-        }
-        if (contractRevenue == null) {
-            writeError(res, "Invalid product ID");
-            return;
-        }
+        if (deletePost) {
+            // Delete a contract
+            String contractIdString = req.getParameter("contractid");
+            if (contractIdString != null) {
+                Long contractId = Long.valueOf(contractIdString);
+                mapper.delete(contractId);
+                res.sendRedirect("contractList.jsp");
+            } else {
+                writeError(res, "Invalid contract ID");
+            }
+        } else {
+            // Create a contract
 
-        LocalDate d = null;
-        try {
-            d = LocalDate.parse(dateInputString);
-        } catch (NumberFormatException | DateTimeParseException e) {
-            writeError(res, "Invalid date");
-            return;
-        }
-        if (d == null) {
-            writeError(res, "Invalid product ID");
-            return;
-        }
-        GregorianCalendar whenSigned = GregorianCalendar.from(d.atStartOfDay(ZoneOffset.UTC));
+            // Get request parameters
+            String contractRevenueString = req.getParameter("contract-revenue");
+            String dateInputString = req.getParameter("date-input");
+            String productIdString = req.getParameter("productid");
 
-        // Get product object
-        ProductBean prod = new ProductMapper().find(productId);
-        if (prod == null) {
-            writeError(res, "Invalid product ID");
-            return;
-        }
-        ContractBean newContract = new ContractBean(prod, Money.dollars(contractRevenue), whenSigned);
-        new ContractMapper().insert(newContract);
+            // Parse product ID
+            Long productId = null;
+            try {
+                productId = Long.parseLong(productIdString);
+            } catch (NumberFormatException e) {
+                writeError(res, "Invalid product ID");
+                return;
+            }
 
-        // Redirect to new contract
-        res.sendRedirect(String.format("contract?contractid=%s", newContract.getId()));
+            Double contractRevenue = null;
+            try {
+                contractRevenue = Double.parseDouble(contractRevenueString);
+            } catch (NumberFormatException e) {
+                writeError(res, "Invalid revenue value");
+                return;
+            }
+
+            LocalDate d = null;
+            try {
+                d = LocalDate.parse(dateInputString);
+            } catch (NumberFormatException | DateTimeParseException e) {
+                writeError(res, "Invalid date");
+                return;
+            }
+            if (d == null) {
+                writeError(res, "Invalid product ID");
+                return;
+            }
+            GregorianCalendar whenSigned = GregorianCalendar.from(d.atStartOfDay(ZoneOffset.UTC));
+
+            // Get product object
+            ProductBean prod = new ProductMapper().find(productId);
+            if (prod == null) {
+                writeError(res, "Invalid product ID");
+                return;
+            }
+            ContractBean newContract = new ContractBean(prod, Money.dollars(contractRevenue), whenSigned);
+            mapper.insert(newContract);
+
+            // Redirect to new contract
+            res.sendRedirect(String.format("contract?contractid=%s", newContract.getId()));
+        }
     }
 
     /**
@@ -127,4 +139,5 @@ public class ContractsController extends HttpServlet {
     private void writeError(HttpServletResponse response, String errorMsg) throws IOException {
         response.getWriter().write(errorMsg);
     }
+
 }

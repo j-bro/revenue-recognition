@@ -25,6 +25,7 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
     private static final String insertStatementString = "INSERT INTO " + tableName + " VALUES (?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
     private static final String findAllStatementString = "SELECT * from " + tableName;
+    private static final String deleteStatementString = "DELETE from " + tableName + " where id=?";
 
     private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -36,6 +37,11 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
     @Override
     public List<ContractBean> findAll() {
         return abstractFindAll();
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        return abstractDelete(id);
     }
 
     @Override
@@ -56,6 +62,11 @@ public class ContractMapper extends AbstractMapper<ContractBean> {
     @Override
     protected String findAllStatement() {
         return findAllStatementString;
+    }
+
+    @Override
+    protected String deleteStatement() {
+        return deleteStatementString;
     }
 
     @Override

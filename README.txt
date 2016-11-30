@@ -2,24 +2,33 @@
 Submission for SOEN 387 - Fall 2016, Assignment #2
 Jeremy Brown ID 27515421
 
-[short description]
+Revenue Recognition is a web application that allows creating sale contracts for given products & calculating
+revenue on any given date for a given contract.
 
 
 ## Usage
 
-### App must
- - Query the content of a contract from the database
- - Calculate the revenue recognition of a contract & store the result in the database
- - "Calculate the revenue for a contract and before a date"
+### Products
+From the homepage, click on 'Products'. Here you will see a list of the existing products in the database.
+To learn more about a product, click on its name in the list to be taken to a page containing more information about it.
 
-### Need to
- - Delay load of object to memory until it is actually needed
- - Check if an object is in memory before querying the database
- - Maintain the modification status of an object before writing to the database
- - Maintain data consistency when multiple users use the system concurrently
+### Contracts
+From the home page, click on 'Contracts'. Here you will see a list of the existing contracts in the database, and a
+form to create a new contract. Click on a contract's name to see more information about it. The info page shows
+the contract's ID, its related product, its revenue, and the recognized revenue at different dates. By entering a date
+in the text field, the user can see how much revenue is expected to be made by the given date.
+
+You can also create a contract by specifying a product, total revenue, and the date when the contract was signed.
+With this informatino, the system computes the different revenue recognition dates for the new contract and stores
+them in the databse, along with all other information related to that contract.
 
 
-## Data
+## Design
+
+The application implements a design that lazy-loads objects from the database, and keeps them in memory in case they
+are needed again soon. When fetching an object, the in-memory cache will be checked before going to the database.
+
+See the DESIGN.txt file for more information about the application design.
 
 
 ## How to run
@@ -28,7 +37,8 @@ Jeremy Brown ID 27515421
 To initialize the database tables, run the db-init.sql script in your MySQL database.
 
 ### Populate initial data
-Once the server is running, you can populate the database with some dummy data by making a POST request to 'http://<your-server-ip>/revenue-recognition/populate'.
+Once the server is running, you can populate the database with some dummy data by making an empty POST request to
+'http://<your-server-ip>/revenue-recognition/populate'.
 
 ### War
 The project can be easily deployed on any container web server using the provided 'revenue-recognition.war' archive.
@@ -48,6 +58,6 @@ From the project root directory, run './gradlew build' to generate the WAR file.
 
 Bonus: if you have Docker installed on your local machine, you can generate a Dockerfile by running ./gradlew createDockerfile.
 This Dockerfile can be used to start a container running a Tomcat server with the application already installed.
-Be sure to pass the environment variables to the container using the -e flag.
+Be sure to pass the environment variables used to connect the database to the container by using the -e flag.
 
 (c) 2016 Jeremy Brown

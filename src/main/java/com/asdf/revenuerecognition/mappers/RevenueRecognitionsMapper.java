@@ -25,6 +25,7 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
     private static final String findAllStatementString = "SELECT * from " + tableName;
     private static final String findAllByContractStatementString = "SELECT * from " + tableName + " WHERE contract=%s";
+    private static final String deleteStatementString = "DELETE FROM " + tableName + " WHERE id=?";
 
     private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -36,6 +37,11 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
     @Override
     public List<RevenueRecognitionBean> findAll() {
         return abstractFindAll();
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        return abstractDelete(id);
     }
 
     @Override
@@ -56,6 +62,11 @@ public class RevenueRecognitionsMapper extends AbstractMapper<RevenueRecognition
     @Override
     protected String findAllStatement() {
         return findAllStatementString;
+    }
+
+    @Override
+    protected String deleteStatement() {
+        return deleteStatementString;
     }
 
     /**

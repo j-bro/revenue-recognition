@@ -55,9 +55,13 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 
 	protected abstract String findAllStatement();
 
+    protected abstract String deleteStatement();
+
 	public abstract T find(Long id);
 
     public abstract List<T> findAll();
+
+    public abstract boolean delete(Long id);
 	
 	/**
 	 * need to give this task to domain specific mapper
@@ -82,7 +86,7 @@ public abstract class AbstractMapper<T extends AbstractBean> {
      * @return
      */
 	protected T abstractFind(Long id){
-		if(db == null) {
+		if (db == null) {
             setConnection();
         }
 
@@ -104,6 +108,26 @@ public abstract class AbstractMapper<T extends AbstractBean> {
 
 		return result;		
 	}
+
+	protected boolean abstractDelete(Long id) {
+        if (db == null) {
+            setConnection();
+        }
+
+        PreparedStatement stmt = null;
+        try {
+            stmt = db.prepareCall(deleteStatement());
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            // Failure in deletion
+            e.printStackTrace();
+            return false;
+        }
+
+        // Success in deletion
+        return true;
+    }
 
 	protected List<T> abstractFindAllByQuery(String query) {
         if (db == null) {

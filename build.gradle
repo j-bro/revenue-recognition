@@ -102,6 +102,11 @@ task createSubmissionZip (type: Zip) {
     from ('.') {
         include 'src/**'
         include 'README.txt'
+        include 'DESIGN.txt'
+    }
+
+    from ('database/db-init') {
+        include '**'
     }
 
     from('build/libs/') {
@@ -110,4 +115,3 @@ task createSubmissionZip (type: Zip) {
 
     archiveName 'A2_27515421.zip'
 }
-

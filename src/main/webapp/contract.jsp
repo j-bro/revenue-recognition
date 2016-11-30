@@ -53,6 +53,19 @@
                             </ul>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col s6">
+                            <br/><br/>
+                            <form id="delete-contract-form" method="post">
+                                <input type="hidden" name="contractid" value="${param.contractid}">
+                                <input type="hidden" name="actiontype" value="delete">
+                                <button class="btn waves-effect waves-light" type="submit" name="action">Delete Contract
+                                    <i class="material-icons right">delete</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </body>

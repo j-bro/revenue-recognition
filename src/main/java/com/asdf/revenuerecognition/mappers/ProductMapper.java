@@ -23,6 +23,7 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
     private static final String insertStatementString = "INSERT INTO " +  tableName + " VALUES (?,?,?,?,?)";
     private static final String lastIdStatement = "SELECT MAX(id) FROM " + tableName;
     private static final String findAllStatementString = "SELECT * FROM " + tableName;
+    private static final String deleteStatementString = "DELETE FROM " + tableName + " WHERE id=?";
 
     private static final String connectionString = "jdbc:mysql://mariadb:3306/revenuerecognition?user=root&password=hello";
 
@@ -36,6 +37,11 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
     @Override
     public List<ProductBean> findAll() {
         return abstractFindAll();
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        return abstractDelete(id);
     }
 
     @Override
@@ -61,6 +67,11 @@ public class ProductMapper extends AbstractMapper<ProductBean> {
     @Override
     protected String findAllStatement() {
         return findAllStatementString;
+    }
+
+    @Override
+    protected String deleteStatement() {
+        return deleteStatementString;
     }
 
     @Override
